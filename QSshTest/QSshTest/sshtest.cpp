@@ -306,14 +306,25 @@ void sshtest::getlockIp(void)
 
 //开始ping的按钮，或者连接上，也会自动开始ping
 void sshtest::start_ping(unsigned int index)
-{
+{  
     if(index >= CARD_NUM)
         return ;
     if(!m_bPingState[index])
     {
         QString strCmd = "ping  ";
         if(bigpack[index]->isChecked())
-            strCmd += " -s 65500 ";
+        {
+            if(ui->lineEdit_bigpack_value->text().length()>= 2 && ui->lineEdit_bigpack_value->text().length() < 6)
+            {
+                strCmd += " -s " + ui->lineEdit_bigpack_value->text() + " ";
+            }
+            else
+            {
+                strCmd += " -s 65500 ";
+            }
+            qDebug() << "strCmd = " <<strCmd;
+        }
+
         strCmd += host_ip;
         strCmd += " & \n"; //添加回车
         emit sigSend(index,strCmd);
@@ -375,12 +386,12 @@ void sshtest::slotDataArrived(QString strMsg,int index, QString strIp, int nPort
     Q_UNUSED(strIp)
     Q_UNUSED(nPort)
 
-    if(strMsg.endsWith("data.\r\n") || strMsg.startsWith("ping",Qt::CaseSensitive)  || strMsg.contains("root", Qt::CaseSensitive))
+    if(strMsg.endsWith("data.\n") || strMsg.startsWith("ping",Qt::CaseInsensitive)  || strMsg.contains("root", Qt::CaseInsensitive))
     {
         return;
     }
 
-    if(strMsg.contains("timed out", Qt::CaseSensitive))
+    if(strMsg.contains("timed out", Qt::CaseInsensitive))
     {
         error_count[index] ++;
         error_count_lab[index]->setText(QString::number(error_count[index]));
