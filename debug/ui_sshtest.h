@@ -21,6 +21,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStackedWidget>
+#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -357,6 +358,7 @@ public:
     QLineEdit *hostip_text;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
+    QPushButton *pushButton_11;
     QWidget *page_2;
     QCheckBox *checkBox_ip_sync;
     QPushButton *pushButton_6;
@@ -465,6 +467,12 @@ public:
     QLabel *label_113;
     QLabel *label_114;
     QLabel *label_115;
+    QWidget *page_4;
+    QTextBrowser *textBrowser_ping_info;
+    QPushButton *pushButton_p4_to_p1;
+    QPushButton *pushButton_p4_to_p1_2;
+    QComboBox *comboBox_which_ch;
+    QLabel *label_116;
     QLabel *versionstring;
     QLabel *status_info;
 
@@ -2214,10 +2222,10 @@ public:
 
         checkBox = new QCheckBox(page);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(420, 20, 91, 19));
+        checkBox->setGeometry(QRect(340, 20, 91, 19));
         pushButton = new QPushButton(page);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(580, 10, 93, 28));
+        pushButton->setGeometry(QRect(600, 10, 93, 28));
         label = new QLabel(page);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(40, 20, 91, 16));
@@ -2233,6 +2241,9 @@ public:
         pushButton_4 = new QPushButton(page);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
         pushButton_4->setGeometry(QRect(940, 10, 93, 28));
+        pushButton_11 = new QPushButton(page);
+        pushButton_11->setObjectName(QStringLiteral("pushButton_11"));
+        pushButton_11->setGeometry(QRect(442, 10, 141, 28));
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
@@ -2667,6 +2678,24 @@ public:
         label_115->setObjectName(QStringLiteral("label_115"));
         label_115->setGeometry(QRect(30, 420, 1001, 16));
         stackedWidget->addWidget(page_3);
+        page_4 = new QWidget();
+        page_4->setObjectName(QStringLiteral("page_4"));
+        textBrowser_ping_info = new QTextBrowser(page_4);
+        textBrowser_ping_info->setObjectName(QStringLiteral("textBrowser_ping_info"));
+        textBrowser_ping_info->setGeometry(QRect(0, 60, 1061, 591));
+        pushButton_p4_to_p1 = new QPushButton(page_4);
+        pushButton_p4_to_p1->setObjectName(QStringLiteral("pushButton_p4_to_p1"));
+        pushButton_p4_to_p1->setGeometry(QRect(900, 20, 93, 28));
+        pushButton_p4_to_p1_2 = new QPushButton(page_4);
+        pushButton_p4_to_p1_2->setObjectName(QStringLiteral("pushButton_p4_to_p1_2"));
+        pushButton_p4_to_p1_2->setGeometry(QRect(80, 20, 121, 28));
+        comboBox_which_ch = new QComboBox(page_4);
+        comboBox_which_ch->setObjectName(QStringLiteral("comboBox_which_ch"));
+        comboBox_which_ch->setGeometry(QRect(456, 20, 61, 22));
+        label_116 = new QLabel(page_4);
+        label_116->setObjectName(QStringLiteral("label_116"));
+        label_116->setGeometry(QRect(270, 20, 171, 20));
+        stackedWidget->addWidget(page_4);
         versionstring = new QLabel(sshtest);
         versionstring->setObjectName(QStringLiteral("versionstring"));
         versionstring->setGeometry(QRect(10, 680, 481, 20));
@@ -2951,6 +2980,7 @@ public:
         pushButton_2->setText(QApplication::translate("sshtest", "\345\205\250\351\203\250\345\201\234\346\255\242", 0));
         pushButton_3->setText(QApplication::translate("sshtest", "\350\256\276\347\275\256", 0));
         pushButton_4->setText(QApplication::translate("sshtest", "\344\275\277\347\224\250\350\257\264\346\230\216", 0));
+        pushButton_11->setText(QApplication::translate("sshtest", "\346\237\245\347\234\213\345\221\275\344\273\244\350\260\203\350\257\225\344\277\241\346\201\257", 0));
         checkBox_ip_sync->setText(QApplication::translate("sshtest", "ip\347\275\221\346\256\265\345\220\214\346\255\245", 0));
         pushButton_6->setText(QApplication::translate("sshtest", "\350\277\224\345\233\236\344\270\273\351\241\265\351\235\242", 0));
         label_84->setText(QApplication::translate("sshtest", "\350\256\276\347\275\256\347\275\221\346\256\265\357\274\2100-254\357\274\211\357\274\232", 0));
@@ -2997,6 +3027,32 @@ public:
         label_113->setText(QApplication::translate("sshtest", "6.\346\257\217\344\270\252\345\274\200\345\217\221\346\235\277\351\203\275\345\217\257\344\273\245\345\215\225\347\213\254\345\274\200\345\247\213ping\345\267\245\344\275\234\357\274\214\344\271\237\345\217\257\344\273\245\345\215\225\347\213\254\345\201\234\346\255\242ping\345\267\245\344\275\234\357\274\214\350\257\267\347\202\271\345\207\273\347\233\270\345\272\224\346\214\211\351\222\256\345\256\214\346\210\220\343\200\202", 0));
         label_114->setText(QApplication::translate("sshtest", "7.\346\257\217\344\270\252\345\274\200\345\217\221\346\235\277\351\203\275\345\217\257\344\273\245\351\200\211\346\213\251ping\345\244\247\345\214\205\357\274\210\351\273\230\350\256\24465500\345\255\227\350\212\202\357\274\211\357\274\214\346\210\226\350\200\205ping\345\260\217\345\214\205\357\274\214\345\213\276\351\200\211\345\244\247\345\214\205\357\274\214\345\210\231\350\241\250\347\244\272ping\345\244\247\345\214\205\357\274\214\345\220\246\345\210\231\344\270\272\345\260\217\345\214\205\343\200\202\350\275\257\344\273\266\345\220\257\345\212\250\345\220\216\351\273\230\350\256\244\345\213\276\351\200\211\345\244\247\345\214\205\346\226\271\345\274\217\343\200\202", 0));
         label_115->setText(QApplication::translate("sshtest", "8.\346\234\254\350\275\257\344\273\266\347\224\261zhaodazhi\357\274\210da_zhi_zhao@qq.com\357\274\211\347\273\264\346\212\244\357\274\214\350\275\257\344\273\266\347\211\210\346\234\254\350\257\267\346\237\245\347\234\213\346\234\254\350\275\257\344\273\266\345\267\246\344\270\213\350\247\222\357\274\214\345\217\257\344\273\245\351\200\232\350\277\207\351\202\256\347\256\261\345\217\215\351\246\210\346\234\254\350\275\257\344\273\266\347\232\204bug\357\274\214\346\204\237\350\260\242\346\202\250\347\232\204\351\205\215\345\220\210\343\200\202", 0));
+        pushButton_p4_to_p1->setText(QApplication::translate("sshtest", "\350\277\224\345\233\236\344\270\273\351\241\265\351\235\242", 0));
+        pushButton_p4_to_p1_2->setText(QApplication::translate("sshtest", "\346\270\205\347\251\272\346\230\276\347\244\272\345\206\205\345\256\271", 0));
+        comboBox_which_ch->clear();
+        comboBox_which_ch->insertItems(0, QStringList()
+         << QApplication::translate("sshtest", "1", 0)
+         << QApplication::translate("sshtest", "2", 0)
+         << QApplication::translate("sshtest", "3", 0)
+         << QApplication::translate("sshtest", "4", 0)
+         << QApplication::translate("sshtest", "5", 0)
+         << QApplication::translate("sshtest", "6", 0)
+         << QApplication::translate("sshtest", "7", 0)
+         << QApplication::translate("sshtest", "8", 0)
+         << QApplication::translate("sshtest", "9", 0)
+         << QApplication::translate("sshtest", "10", 0)
+         << QApplication::translate("sshtest", "11", 0)
+         << QApplication::translate("sshtest", "12", 0)
+         << QApplication::translate("sshtest", "13", 0)
+         << QApplication::translate("sshtest", "14", 0)
+         << QApplication::translate("sshtest", "15", 0)
+         << QApplication::translate("sshtest", "16", 0)
+         << QApplication::translate("sshtest", "17", 0)
+         << QApplication::translate("sshtest", "18", 0)
+         << QApplication::translate("sshtest", "19", 0)
+         << QApplication::translate("sshtest", "20", 0)
+        );
+        label_116->setText(QApplication::translate("sshtest", "\350\257\267\351\200\211\346\213\251\351\234\200\350\246\201\346\230\276\347\244\272\347\232\204\351\200\232\351\201\223\357\274\232", 0));
         versionstring->setText(QApplication::translate("sshtest", "TextLabel", 0));
         status_info->setText(QString());
     } // retranslateUi

@@ -144,6 +144,12 @@ private slots:
 
     void on_pushButton_10_clicked();
 
+    void on_pushButton_p4_to_p1_clicked();
+
+    void on_pushButton_p4_to_p1_2_clicked();
+
+    void on_pushButton_11_clicked();
+
 signals:
     void sigSend(QString strMsg);
     void sigSend(int index,QString strMsg);

@@ -36,6 +36,7 @@ sshtest::sshtest(QWidget *parent) :
     //限制输入数字
     ui->lineEdit_2->setValidator(new QIntValidator(0,254,this));
     ui->lineEdit_3->setValidator(new QIntValidator(0,254,this));
+    ui->textBrowser_ping_info->setMaximumHeight(5000);
 }
 
 
@@ -385,6 +386,12 @@ void sshtest::slotDataArrived(QString strMsg,int index, QString strIp, int nPort
 {
     Q_UNUSED(strIp)
     Q_UNUSED(nPort)
+
+    if(index == ui->comboBox_which_ch->currentIndex())
+    {
+        ui->textBrowser_ping_info->append(strMsg);
+    }
+
 
     if(strMsg.endsWith("data.\n") || strMsg.startsWith("ping",Qt::CaseInsensitive)  || strMsg.contains("root", Qt::CaseInsensitive))
     {
@@ -1129,4 +1136,19 @@ void sshtest::on_pushButton_10_clicked()
 
         }
     }
+}
+
+void sshtest::on_pushButton_p4_to_p1_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void sshtest::on_pushButton_p4_to_p1_2_clicked()
+{
+    ui->textBrowser_ping_info->clear();
+}
+
+void sshtest::on_pushButton_11_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
 }
