@@ -150,6 +150,29 @@ private slots:
 
     void on_pushButton_11_clicked();
 
+    void on_checkBox_direction_toggled(bool checked);
+
+    void ping1_info_show();
+    void ping2_info_show();
+    void ping3_info_show();
+    void ping4_info_show();
+    void ping5_info_show();
+    void ping6_info_show();
+    void ping7_info_show();
+    void ping8_info_show();
+    void ping9_info_show();
+    void ping10_info_show();
+    void ping11_info_show();
+    void ping12_info_show();
+    void ping13_info_show();
+    void ping14_info_show();
+    void ping15_info_show();
+    void ping16_info_show();
+    void ping17_info_show();
+    void ping18_info_show();
+    void ping19_info_show();
+    void ping20_info_show();
+
 signals:
     void sigSend(QString strMsg);
     void sigSend(int index,QString strMsg);
@@ -160,12 +183,15 @@ signals:
 private:
     Ui::sshtest *ui;
 
-
+//    void (sshtest::*ping_info_show_arr[CARD_NUM])();
     bool m_bConnectState[CARD_NUM];
     bool m_bPingState[CARD_NUM];
     bool m_stopconnectState[CARD_NUM];      //停止连接的状态
+    QProcess *ping_process[CARD_NUM];   //使用进程进行ping
+//    bool is_ping_to_device;  //ping设备吗？默认是设备ping电脑，false。true表示电脑ping设备
     CConnectionForSshClient *m_sshSocket[CARD_NUM];
     int error_count[CARD_NUM];
+    int ping_count[CARD_NUM];   //计数ping的次数
     QPushButton* connect_btn[CARD_NUM] ;  //连接按钮
     QPushButton* ping_btn[CARD_NUM] ;  //ping按钮
     QLabel * error_count_lab[CARD_NUM];  //错误计数

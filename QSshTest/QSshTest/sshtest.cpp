@@ -1,16 +1,16 @@
-#include "sshtest.h"
+﻿#include "sshtest.h"
 #include "ui_sshtest.h"
 #include "stdlib.h"
 #include "QHostInfo"
 #include "QHostAddress"
 #include <QMessageBox>
+#include <QTextCodec>
 
 
 
 
 
-
-#define SOFTWARE_VERSION 100
+#define SOFTWARE_VERSION 110   //2023-05-24,从100升级到110，增加了window这边ping的功能
 
 
 
@@ -246,7 +246,26 @@ void sshtest::objarrays_init(void)
     setIP_Text[18] = ui->setIP_Text_19;
     setIP_Text[19] = ui->setIP_Text_20;
 
-
+//    ping_info_show_arr[0] = ping1_info_show;
+//    ping_info_show_arr[1] = ping2_info_show;
+//    ping_info_show_arr[2] = ping3_info_show;
+//    ping_info_show_arr[3] = ping4_info_show;
+//    ping_info_show_arr[4] = ping5_info_show;
+//    ping_info_show_arr[5] = ping6_info_show;
+//    ping_info_show_arr[6] = ping7_info_show;
+//    ping_info_show_arr[7] = ping8_info_show;
+//    ping_info_show_arr[8] = ping9_info_show;
+//    ping_info_show_arr[9] = ping10_info_show;
+//    ping_info_show_arr[10] = ping11_info_show;
+//    ping_info_show_arr[11] = ping12_info_show;
+//    ping_info_show_arr[12] = ping13_info_show;
+//    ping_info_show_arr[13] = ping14_info_show;
+//    ping_info_show_arr[14] = ping15_info_show;
+//    ping_info_show_arr[15] = ping16_info_show;
+//    ping_info_show_arr[16] = ping17_info_show;
+//    ping_info_show_arr[17] = ping18_info_show;
+//    ping_info_show_arr[18] = ping19_info_show;
+//    ping_info_show_arr[19] = ping20_info_show;
 
     for(i=0;i<CARD_NUM;i++)
     {
@@ -258,6 +277,10 @@ void sshtest::objarrays_init(void)
         m_bPingState[i] = false;        //未开始ping
         error_count[i] = 0;             //错误计数清零
         m_stopconnectState[i] = true;    //停止连接
+
+        ping_count[i] = 0;
+        ping_process[i] = NULL;   //初始值
+
     //    ip_text[i]->setReadOnly(true);
     //    connect(bigpack[i],SIGNAL(stateChanged(int)),this,SLOT(slot_bigpack_stateChanged(int)));
     }
@@ -266,6 +289,8 @@ void sshtest::objarrays_init(void)
     ui->hostip_text->setText(host_ip);
     //qDebug() << QString("软件编译时间 %1 %2 版本号:%3").arg(__DATE__).arg(__TIME__).arg(QString().setNum(double(SOFTWARE_VERSION)/100.0,'f',2));
     ui->versionstring->setText(QString("软件编译时间 %1 %2 版本号:%3").arg(__DATE__).arg(__TIME__).arg(QString().setNum(double(SOFTWARE_VERSION)/100.0,'f',2)));
+
+    ui->pushButton_2->setEnabled(false);
 
     Get_FileConfig(0);  //读一次配置文件
 }
@@ -310,27 +335,50 @@ void sshtest::start_ping(unsigned int index)
 {  
     if(index >= CARD_NUM)
         return ;
-    if(!m_bPingState[index])
+
+    qDebug() << " start_ping" << index;
+    if(!m_bPingState[index])   //如果没有ping
     {
-        QString strCmd = "ping  ";
+        QString strCmd = "ping -t  ";
         if(bigpack[index]->isChecked())
         {
             if(ui->lineEdit_bigpack_value->text().length()>= 2 && ui->lineEdit_bigpack_value->text().length() < 6)
             {
-                strCmd += " -s " + ui->lineEdit_bigpack_value->text() + " ";
+                if(!ui->checkBox_direction->isChecked())
+                {
+                    strCmd += " -s " + ui->lineEdit_bigpack_value->text() + " ";
+                }
+                else
+                {
+                    strCmd += " -l " + ui->lineEdit_bigpack_value->text() + " ";
+                }
             }
             else
             {
-                strCmd += " -s 65500 ";
+                if(!ui->checkBox_direction->isChecked())
+                    strCmd += " -s 65500 ";
+                else
+                {
+                    strCmd += " -l 65500 ";
+                }
             }
             qDebug() << "strCmd = " <<strCmd;
         }
 
-        strCmd += host_ip;
-        strCmd += " & \n"; //添加回车
-        emit sigSend(index,strCmd);
+        if(!ui->checkBox_direction->isChecked()){
+            strCmd += host_ip;
+            strCmd += " & \n"; //添加回车
+            emit sigSend(index,strCmd);
+        }
+        else //电脑ping设备
+        {
+            strCmd += ip_text[index]->text();   //加上设备ip
+            qDebug() << "computer ping strCmd = " <<strCmd;
+            ping_process[index]->start(strCmd);  //开始ping
+        }
         //m_sshSocket[index]->sshdateSend(strCmd);
         error_count[index] = 0;
+        ping_count[index] = 0;
         error_count_lab[index]->setText("0");
         m_bPingState[index] = true;
         ping_btn[index]->setText("停止ping");
@@ -381,54 +429,121 @@ void sshtest::slotConnectStateChanged(bool bState,int index, QString strIp, int 
 }
 
 
+
+
 //槽函数，收到了客户端的数据
 void sshtest::slotDataArrived(QString strMsg,int index, QString strIp, int nPort)
 {
     Q_UNUSED(strIp)
     Q_UNUSED(nPort)
 
+    qDebug() << "index" << index << " strMsg" <<strMsg ;
+     //qDebug() << "index" << index << "ping_count" << ping_count[index];
+    if(ui->checkBox_direction->isChecked() && strMsg.contains("\r\n"))
+        ping_count[index]++;
+    qDebug() << "index" << index << "ping_count" << ping_count[index];
+    icmp_count[index]->setText(QString::number(ping_count[index]));
+//    return;
     if(index == ui->comboBox_which_ch->currentIndex())
     {
         ui->textBrowser_ping_info->append(strMsg);
     }
-
 
     if(strMsg.endsWith("data.\n") || strMsg.startsWith("ping",Qt::CaseInsensitive)  || strMsg.contains("root", Qt::CaseInsensitive))
     {
         return;
     }
 
-    if(strMsg.contains("timed out", Qt::CaseInsensitive))
+    if(strMsg.contains("timed out", Qt::CaseInsensitive) || strMsg.contains("请求超时", Qt::CaseInsensitive) )
     {
         error_count[index] ++;
+         qDebug() << "index  " << index << "error_count" << error_count[index];
         error_count_lab[index]->setText(QString::number(error_count[index]));
+        status_led[index]->setText("板"+QString::number(index+1)+"异常");
+        status_led[index]->setStyleSheet("QLabel{background-color:#ff0000;border-radius:5px;}");
         return;
     }
 
     if(m_bPingState[index])
-    {
-        QStringList myList = strMsg.split(' ');
-
-        if(myList.length()>6)
+    {        
+        if(!ui->checkBox_direction->isChecked())
         {
-            qDebug()<< myList[6];    //time
-            QStringList myList1 = myList[6].split('=');
-            if(myList1.length()>1)
+            QStringList myList = strMsg.split(' ');
+            if(myList.length()>6)
             {
-                time_val_lab[index]->setText(myList1[1]);
+                qDebug()<< myList[6];    //time
+                QStringList myList1 = myList[6].split('=');
+                if(myList1.length()>1)
+                {
+                    time_val_lab[index]->setText(myList1[1]);
+                    status_led[index]->setText("板"+QString::number(index+1)+"正常");
+                    status_led[index]->setStyleSheet("QLabel{background-color:#00ff00;border-radius:5px;}");
+                }
+                else
+                {
+                    status_led[index]->setText("板"+QString::number(index+1)+"异常");
+                    status_led[index]->setStyleSheet("QLabel{background-color:#ff0000;border-radius:5px;}");
+                    error_count[index] ++;
+                    error_count_lab[index]->setText(QString::number(error_count[index]));
+                }
+                myList1 = myList[4].split('=');   //icmp_seq
+                if(myList1.length()>1)
+                    icmp_count[index]->setText(myList1[1]);
+            }
+        }
+        else //windows 的包与linux不同
+        {
+            int index2=0,index1=0;
+            if(strMsg.contains("time=", Qt::CaseInsensitive) || strMsg.contains("time<", Qt::CaseInsensitive))
+            {
+                //qDebug()<< myList[4];    //time
+
+                index2 = strMsg.indexOf("time");
+
+                if(index2 >= 0)
+                    index2 += 5;
+                qDebug() << "index2 = " <<index2;
+                index1 = strMsg.indexOf("ms");
+                qDebug() << "index1 = " <<index1;
+            }
+            else if(strMsg.contains("时间=", Qt::CaseInsensitive) || strMsg.contains("时间<", Qt::CaseInsensitive))
+            {
+                index2 = strMsg.indexOf("时间");
+
+                if(index2 >= 0)
+                    index2 += 3;
+                qDebug() << "index2 = " <<index2;
+                index1 = strMsg.indexOf("ms");
+                qDebug() << "index1 = " <<index1;
+             }
+//            else
+//            {
+//                status_led[index]->setText("板"+QString::number(index+1)+"异常");
+//                status_led[index]->setStyleSheet("QLabel{background-color:#ff0000;border-radius:5px;}");
+//                error_count[index] ++;
+//                error_count_lab[index]->setText(QString::number(error_count[index]));
+//                index2 = index1 = 0;
+//            }
+
+
+
+            if(index1 > index2)
+            {
+                qDebug() << strMsg.mid(index2,index1-index2);
+                time_val_lab[index]->setText(strMsg.mid(index2,index1-index2));
                 status_led[index]->setText("板"+QString::number(index+1)+"正常");
                 status_led[index]->setStyleSheet("QLabel{background-color:#00ff00;border-radius:5px;}");
             }
-            else
-            {
-                status_led[index]->setText("板"+QString::number(index+1)+"异常");
-                status_led[index]->setStyleSheet("QLabel{background-color:#ff0000;border-radius:5px;}");
-                error_count[index] ++;
-                error_count_lab[index]->setText(QString::number(error_count[index]));
-            }
-            myList1 = myList[4].split('=');   //icmp_seq
-            if(myList1.length()>1)
-                icmp_count[index]->setText(myList1[1]);
+//            else
+//            {
+//                status_led[index]->setText("板"+QString::number(index+1)+"异常");
+//                status_led[index]->setStyleSheet("QLabel{background-color:#ff0000;border-radius:5px;}");
+//                error_count[index] ++;
+//                error_count_lab[index]->setText(QString::number(error_count[index]));
+//                 qDebug() << "222 index  " << index << "error_count" << error_count[index];
+//            }
+
+
         }
 
     }
@@ -443,16 +558,35 @@ void sshtest::slotDataArrived(QString strMsg,int index, QString strIp, int nPort
 void sshtest::disconnect_func(int index)
 {
     if(m_bConnectState[index])  //已经连接了，则断开
-    {
-        m_bConnectState[index] = false;
+    {       
         m_bPingState[index] = false;
-        emit sigDisconnected(index);//断开连接
-        connect_btn[index]->setText("连接");
-        connect_btn[index]->setStyleSheet("QPushButton{background-color:#ff0000;}");
+        if(!ui->checkBox_direction->isChecked())  //设备ping电脑
+        {
+            m_bConnectState[index] = false;
+            emit sigDisconnected(index);//断开连接
+//            if(m_sshSocket[index])
+//            {
+////                delete m_sshSocket[index];
+////                m_sshSocket[index] = NULL;
+//            }
+            connect_btn[index]->setText("连接");
+            connect_btn[index]->setStyleSheet("QPushButton{background-color:#ff0000;}");
+            ping_btn[index]->setEnabled(false);
+            m_stopconnectState[index] = true;    //停止连接
+        }
+        else
+        {
+            qDebug() << "disconnect_func";
+            if(ping_process[index] && ping_process[index]->state() == QProcess::Running)
+            {    ping_process[index]->kill();  //删除进程
+                qDebug() << "disconnect_func 22";
+            }
+        }
+
         ping_btn[index]->setText("开始ping");
-        ping_btn[index]->setEnabled(false);
         ip_text[index]->setEnabled(true);   //ip部分能修改
-        m_stopconnectState[index] = true;    //停止连接
+
+
     }
 }
 
@@ -522,21 +656,50 @@ void sshtest::on_m_pBtnConnect_1_clicked()
 //ping按钮的功能函数，点击ping按钮的操作
 void sshtest::pingButton_func(int index)
 {
-    if(m_bConnectState[index] )
+    int i;
+    qDebug()<< "pingButton_func = " << index;
+    if(ui->checkBox_direction->isChecked() || m_bConnectState[index])   //已经连接
     {
-        if(!m_bPingState[index]){
+        if(!m_bPingState[index]){   //如果没有ping
             start_ping(index);
 
         }
-        else if(m_bPingState[index]){
-            QString strCmd = "killall ping";   //"kill -9 `ps aux | grep ping | grep -v grep |head -n 1 |awk '{printf $1}'`";//
-            strCmd += "\n"; //添加回车
+        else if(m_bPingState[index]){  //如果已经是ping了
+            if(!ui->checkBox_direction->isChecked()){
+                QString strCmd = "killall ping";   //"kill -9 `ps aux | grep ping | grep -v grep |head -n 1 |awk '{printf $1}'`";//
+                strCmd += "\n"; //添加回车
+                emit sigSend(index,strCmd);
+            }
+            else
+            {
+                //杀掉进程
+                if(ping_process[index] && ping_process[index]->state()== QProcess::Running)
+                    ping_process[index]->kill();
+            }
             m_bPingState[index] = false;
             ping_btn[index]->setText("开始ping");
             bigpack[index]->setEnabled(true);
-            emit sigSend(index,strCmd);
+
         }
     }
+
+
+
+    for(i=0;i<CARD_NUM;i++)
+    {
+        if(m_bPingState[i])  //有一个ping 就不允许修改状态
+        {
+            ui->checkBox_direction->setEnabled(false);
+            ui->lineEdit_bigpack_value->setEnabled(false);
+            return ;
+        }
+    }
+
+    ui->checkBox_direction->setEnabled(true);
+    ui->lineEdit_bigpack_value->setEnabled(true);
+    ui->pushButton_2->setEnabled(false);
+    ui->pushButton->setEnabled(true);
+
 }
 
 
@@ -547,6 +710,7 @@ void sshtest::on_pingButton_1_clicked()
 {
 //    int index = 0;
     pingButton_func(0);
+    qDebug() << " pingButton_1_clicked";
 }
 
 
@@ -759,13 +923,26 @@ void sshtest::on_m_pBtnConnect_20_clicked()
 void sshtest::on_pushButton_clicked()
 {
     int i;
-//    ui->pushButton->setEnabled(false);
-    for(i=0;i<CARD_NUM;i++)
+    ui->pushButton->setEnabled(false);
+
+    if(!ui->checkBox_direction->isChecked())  //设备ping电脑
     {
-        connect_func(i);
-    //    m_stopconnectState[i] = false;    //连接
-    //    QThread::sleep(1);
+        for(i=0;i<CARD_NUM;i++)
+        {
+            connect_func(i);
+        //    m_stopconnectState[i] = false;    //连接
+        //    QThread::sleep(1);
+        }
     }
+    else //电脑ping设备
+    {
+        for(i=0;i<CARD_NUM;i++)
+        {
+            pingButton_func(i);
+            //ping_process[i]->start();
+        }
+    }
+    ui->pushButton_2->setEnabled(true);
 //    ui->pushButton->setEnabled(true);
 }
 
@@ -774,12 +951,16 @@ void sshtest::on_pushButton_clicked()
 void sshtest::on_pushButton_2_clicked()
 {
     int i;
+
     for(i=0;i<CARD_NUM;i++)
     {
         disconnect_func(i);
-        bigpack[i]->setEnabled(true);  //不可用了
+        bigpack[i]->setEnabled(true);  //可用了
     }
-    ui->checkBox->setEnabled(true);  //全选大包也不可用了
+    ui->checkBox->setEnabled(true);  //全选大包可用了
+    ui->checkBox_direction->setEnabled(true);  //ping方向可用了
+    ui->lineEdit_bigpack_value->setEnabled(true);  //大包的数值
+    ui->pushButton->setEnabled(true);
 }
 
 
@@ -790,9 +971,11 @@ void sshtest::on_pushButton_3_clicked()
 
     for(i=0;i<CARD_NUM;i++)
     {
-        if(m_bConnectState[i])
+        if(m_bPingState[i])
             return;
     }
+//    if(!ui->pushButton_2->isEnabled())
+//        return;
 
     ui->stackedWidget->setCurrentIndex(1);
 }
@@ -1152,3 +1335,165 @@ void sshtest::on_pushButton_11_clicked()
 {
     ui->stackedWidget->setCurrentIndex(3);
 }
+
+
+//状态改变
+void sshtest::on_checkBox_direction_toggled(bool checked)
+{
+    int i;
+    if(checked)
+    {
+    //   ui->pushButton->setEnabled(false);
+
+        for(i=0;i<CARD_NUM;i++)
+        {
+            connect_btn[i]->setEnabled(false);
+            ping_btn[i]->setEnabled(true);
+            ping_process[i] = new QProcess();
+            m_bConnectState[i] = true;    //电脑ping设备，默认已经连接了。
+           // connect(ping_process[i], SIGNAL(readyReadStandardOutput()),this,SLOT(ping_info_show_arr[i]()));//连接信号
+        }
+        connect(ping_process[0], SIGNAL(readyReadStandardOutput()),this,SLOT(ping1_info_show()));//连接信号
+        connect(ping_process[1], SIGNAL(readyReadStandardOutput()),this,SLOT(ping2_info_show()));//连接信号
+        connect(ping_process[2], SIGNAL(readyReadStandardOutput()),this,SLOT(ping3_info_show()));//连接信号
+        connect(ping_process[3], SIGNAL(readyReadStandardOutput()),this,SLOT(ping4_info_show()));//连接信号
+        connect(ping_process[4], SIGNAL(readyReadStandardOutput()),this,SLOT(ping5_info_show()));//连接信号
+        connect(ping_process[5], SIGNAL(readyReadStandardOutput()),this,SLOT(ping6_info_show()));//连接信号
+        connect(ping_process[6], SIGNAL(readyReadStandardOutput()),this,SLOT(ping7_info_show()));//连接信号
+        connect(ping_process[7], SIGNAL(readyReadStandardOutput()),this,SLOT(ping8_info_show()));//连接信号
+        connect(ping_process[8], SIGNAL(readyReadStandardOutput()),this,SLOT(ping9_info_show()));//连接信号
+        connect(ping_process[9], SIGNAL(readyReadStandardOutput()),this,SLOT(ping10_info_show()));//连接信号
+        connect(ping_process[10], SIGNAL(readyReadStandardOutput()),this,SLOT(ping11_info_show()));//连接信号
+        connect(ping_process[11], SIGNAL(readyReadStandardOutput()),this,SLOT(ping12_info_show()));//连接信号
+        connect(ping_process[12], SIGNAL(readyReadStandardOutput()),this,SLOT(ping13_info_show()));//连接信号
+        connect(ping_process[13], SIGNAL(readyReadStandardOutput()),this,SLOT(ping14_info_show()));//连接信号
+        connect(ping_process[14], SIGNAL(readyReadStandardOutput()),this,SLOT(ping15_info_show()));//连接信号
+        connect(ping_process[15], SIGNAL(readyReadStandardOutput()),this,SLOT(ping16_info_show()));//连接信号
+        connect(ping_process[16], SIGNAL(readyReadStandardOutput()),this,SLOT(ping17_info_show()));//连接信号
+        connect(ping_process[17], SIGNAL(readyReadStandardOutput()),this,SLOT(ping18_info_show()));//连接信号
+        connect(ping_process[18], SIGNAL(readyReadStandardOutput()),this,SLOT(ping19_info_show()));//连接信号
+        connect(ping_process[19], SIGNAL(readyReadStandardOutput()),this,SLOT(ping20_info_show()));//连接信号
+    }
+    else
+    {
+    //    ui->pushButton->setEnabled(true);
+        for(i=0;i<CARD_NUM;i++)
+        {
+            connect_btn[i]->setEnabled(true);
+            ping_btn[i]->setEnabled(false);
+            if(ping_process[i]&&ping_process[i]->state()==QProcess::Running)
+            {
+                ping_process[i]->kill();
+                ping_process[i]->waitForFinished(1000);  //等待结束
+            }
+            delete ping_process[i];
+            ping_process[i] = NULL;
+        }
+    }
+}
+
+
+
+
+void sshtest::ping1_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[0]->readAllStandardOutput());  //转一下，不然windows中文乱码
+//    qDebug() <<"ping1_info_show = "<< strMsg;
+    slotDataArrived(strMsg,0, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping2_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[1]->readAllStandardOutput());
+    slotDataArrived(strMsg,1, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping3_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[2]->readAllStandardOutput());
+    slotDataArrived(strMsg,2, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping4_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[3]->readAllStandardOutput());
+    slotDataArrived(strMsg,3, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping5_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[4]->readAllStandardOutput());
+    slotDataArrived(strMsg,4, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping6_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[5]->readAllStandardOutput());
+    slotDataArrived(strMsg,5, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping7_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[6]->readAllStandardOutput());
+    slotDataArrived(strMsg,6, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping8_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[7]->readAllStandardOutput());
+    slotDataArrived(strMsg,7, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping9_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[8]->readAllStandardOutput());
+    slotDataArrived(strMsg,8, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping10_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[9]->readAllStandardOutput());
+    slotDataArrived(strMsg,9, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping11_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[10]->readAllStandardOutput());
+    slotDataArrived(strMsg,10, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping12_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[11]->readAllStandardOutput());
+    slotDataArrived(strMsg,11, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping13_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[12]->readAllStandardOutput());
+    slotDataArrived(strMsg,12, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping14_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[13]->readAllStandardOutput());
+    slotDataArrived(strMsg,13, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping15_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[14]->readAllStandardOutput());
+    slotDataArrived(strMsg,14, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping16_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[15]->readAllStandardOutput());
+    slotDataArrived(strMsg,15, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping17_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[16]->readAllStandardOutput());
+    slotDataArrived(strMsg,16, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping18_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[17]->readAllStandardOutput());
+    slotDataArrived(strMsg,17, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping19_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[18]->readAllStandardOutput());
+    slotDataArrived(strMsg,18, "strIp", 0);   //后两个参数不需要，随便填
+}
+void sshtest::ping20_info_show()
+{
+    QString strMsg = QString::fromLocal8Bit(ping_process[19]->readAllStandardOutput());
+    slotDataArrived(strMsg,19, "strIp", 0);   //后两个参数不需要，随便填
+}
+

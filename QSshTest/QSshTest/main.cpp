@@ -1,6 +1,7 @@
-#include "Widget.h"
+﻿#include "Widget.h"
 #include "sshtest.h"
 #include <QApplication>
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
@@ -8,6 +9,7 @@ int main(int argc, char *argv[])
 
 //    Widget w;
 //    w.show();
+
     sshtest sshw;
 
     sshw.show();

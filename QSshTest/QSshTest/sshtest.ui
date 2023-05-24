@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1070</width>
-    <height>705</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -37,9 +37,9 @@
   <widget class="QStackedWidget" name="stackedWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>0</y>
-     <width>1051</width>
+     <width>1041</width>
      <height>671</height>
     </rect>
    </property>
@@ -2573,6 +2573,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>time：</string>
         </property>
@@ -2580,6 +2586,18 @@
       </item>
       <item>
        <widget class="QLabel" name="time_val_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>0</string>
         </property>
@@ -2603,6 +2621,12 @@
       </item>
       <item>
        <widget class="QLabel" name="label_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string> icmp序号：</string>
         </property>
@@ -2610,6 +2634,18 @@
       </item>
       <item>
        <widget class="QLabel" name="icmp_count_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>0</string>
         </property>
@@ -2620,6 +2656,12 @@
       </item>
       <item>
        <widget class="QLabel" name="error_text">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>异常次数：</string>
         </property>
@@ -2627,6 +2669,18 @@
       </item>
       <item>
        <widget class="QLabel" name="error_count_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>0</string>
         </property>
@@ -2790,8 +2844,8 @@
     <widget class="QCheckBox" name="checkBox">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>20</y>
+       <x>360</x>
+       <y>10</y>
        <width>91</width>
        <height>19</height>
       </rect>
@@ -2803,7 +2857,7 @@
     <widget class="QPushButton" name="pushButton">
      <property name="geometry">
       <rect>
-       <x>600</x>
+       <x>820</x>
        <y>10</y>
        <width>93</width>
        <height>28</height>
@@ -2816,8 +2870,8 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>20</y>
+       <x>10</x>
+       <y>0</y>
        <width>91</width>
        <height>16</height>
       </rect>
@@ -2829,7 +2883,7 @@
     <widget class="QPushButton" name="pushButton_2">
      <property name="geometry">
       <rect>
-       <x>720</x>
+       <x>930</x>
        <y>10</y>
        <width>93</width>
        <height>28</height>
@@ -2842,43 +2896,17 @@
     <widget class="QLineEdit" name="hostip_text">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>20</y>
+       <x>130</x>
+       <y>0</y>
        <width>171</width>
        <height>21</height>
       </rect>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="geometry">
-      <rect>
-       <x>850</x>
-       <y>10</y>
-       <width>71</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>设置</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_4">
-     <property name="geometry">
-      <rect>
-       <x>940</x>
-       <y>10</y>
-       <width>93</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>使用说明</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="pushButton_11">
      <property name="geometry">
       <rect>
-       <x>442</x>
+       <x>660</x>
        <y>10</y>
        <width>141</width>
        <height>28</height>
@@ -2886,6 +2914,54 @@
      </property>
      <property name="text">
       <string>查看命令调试信息</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_direction">
+     <property name="geometry">
+      <rect>
+       <x>470</x>
+       <y>10</y>
+       <width>151</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>方向：电脑到设备</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_bigpack_info">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>211</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ping包字节数（128-65500）：</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_bigpack_value">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>30</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhDigitsOnly</set>
+     </property>
+     <property name="text">
+      <string>65500</string>
+     </property>
+     <property name="maxLength">
+      <number>5</number>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </widget>
@@ -2901,19 +2977,6 @@
      </property>
      <property name="text">
       <string>ip网段同步</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_6">
-     <property name="geometry">
-      <rect>
-       <x>890</x>
-       <y>70</y>
-       <width>93</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>返回主页面</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_84">
@@ -3581,41 +3644,6 @@
       </rect>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_bigpack_value">
-     <property name="geometry">
-      <rect>
-       <x>290</x>
-       <y>440</y>
-       <width>121</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhDigitsOnly</set>
-     </property>
-     <property name="text">
-      <string>128</string>
-     </property>
-     <property name="maxLength">
-      <number>5</number>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_bigpack_info">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>440</y>
-       <width>231</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>ping包字节数（128-65500）：</string>
-     </property>
-    </widget>
    </widget>
    <widget class="QWidget" name="page_3">
     <widget class="QLabel" name="label_82">
@@ -3632,19 +3660,6 @@
      </property>
      <property name="text">
       <string>使用说明</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_5">
-     <property name="geometry">
-      <rect>
-       <x>930</x>
-       <y>10</y>
-       <width>93</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>返回主页面</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_106">
@@ -3774,7 +3789,33 @@
       </rect>
      </property>
      <property name="text">
-      <string>8.本软件由zhaodazhi（da_zhi_zhao@qq.com）维护，软件版本请查看本软件左下角，可以通过邮箱反馈本软件的bug，感谢您的配合。</string>
+      <string>8.增加“查看调试信息”按钮，注意在界面选择对应的通道，任意时刻只能查看一个通道的信息。建议使用清除按钮清除之前的信息</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_117">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>460</y>
+       <width>1001</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>9.增加“方向：电脑到设备”，表示，ping的方向由电脑发起，电脑ping设备，不勾选时，表示ping包是设备ping电脑。</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_118">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>500</y>
+       <width>1001</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>10.本软件由zhaodazhi（da_zhi_zhao@qq.com）维护，软件版本请查看本软件左下角，可以通过邮箱反馈本软件的bug，感谢您的配合。</string>
      </property>
     </widget>
    </widget>
@@ -3787,19 +3828,6 @@
        <width>1061</width>
        <height>591</height>
       </rect>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_p4_to_p1">
-     <property name="geometry">
-      <rect>
-       <x>900</x>
-       <y>20</y>
-       <width>93</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>返回主页面</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_p4_to_p1_2">
@@ -3944,7 +3972,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>680</y>
+     <y>670</y>
      <width>481</width>
      <height>20</height>
     </rect>
@@ -3964,6 +3992,45 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>670</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>使用说明</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>670</y>
+     <width>71</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>设置</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_6">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>670</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>返回主页面</string>
    </property>
   </widget>
  </widget>
